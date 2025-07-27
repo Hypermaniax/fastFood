@@ -1,8 +1,8 @@
-const { createMerchant } = require("../../../database/queries/merchant");
-const ErrorHandler = require("../../../utils/ErrorHandler");
+const { createMerchant } = require("../../../../database/queries/merchant");
+const ErrorHandler = require("../../../../utils/ErrorHandler");
 const {
   createMerchantShecma,
-} = require("../../../validators/merchant.validator");
+} = require("../../../../validators/merchant.validator");
 
 const createRestaurantSrv = async (body, user) => {
   const { error } = createMerchantShecma.validate(body);

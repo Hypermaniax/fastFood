@@ -1,8 +1,8 @@
-const { updateMerchant } = require("../../../database/queries/merchant");
-const ErrorHandler = require("../../../utils/ErrorHandler");
+const { updateMerchant } = require("../../../../database/queries/merchant");
+const ErrorHandler = require("../../../../utils/ErrorHandler");
 const {
   updateMerchantSchema,
-} = require("../../../validators/merchant.validator");
+} = require("../../../../validators/merchant.validator");
 
 const updateRestaurantSrv = async (data, idRestaurant, idUser) => {
   const { error } = updateMerchantSchema.validate(data);

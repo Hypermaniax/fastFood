@@ -1,4 +1,4 @@
-const { readAllMerchant } = require("../../../database/queries/merchant");
+const { readAllMerchant } = require("../../../../database/queries/merchant");
 
 const readAllRestaurantSrv = async (idRestaurant) => {
   const merchant = await readAllMerchant(idRestaurant);

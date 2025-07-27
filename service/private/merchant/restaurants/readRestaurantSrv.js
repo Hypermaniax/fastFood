@@ -1,5 +1,5 @@
-const { readMerchant } = require("../../../database/queries/merchant");
-const ErrorHandler = require("../../../utils/ErrorHandler");
+const { readMerchant } = require("../../../../database/queries/merchant");
+const ErrorHandler = require("../../../../utils/ErrorHandler");
 
 const readRestaurantSrv = async (idRestaurant, idUser) => {
   const merchant = await readMerchant(idRestaurant, idUser);

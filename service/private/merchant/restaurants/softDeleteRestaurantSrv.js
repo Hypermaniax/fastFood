@@ -1,5 +1,5 @@
-const { softDeleteMerchant } = require("../../../database/queries/merchant");
-const ErrorHandler = require("../../../utils/ErrorHandler");
+const { softDeleteMerchant } = require("../../../../database/queries/merchant");
+const ErrorHandler = require("../../../../utils/ErrorHandler");
 
 const softDeleteRestaurantSrv = async (idRestaurant, idUser) => {
     const merchant =  await softDeleteMerchant(idRestaurant, idUser)
