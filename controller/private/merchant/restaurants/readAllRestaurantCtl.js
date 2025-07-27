@@ -1,4 +1,4 @@
-const readAllRestaurantSrv = require("../../../service/private/merchant/readAllRestaurantSrv");
+const readAllRestaurantSrv = require("../../../../service/private/merchant/readAllRestaurantSrv");
 
 const readAllRestaurantsCtl = async (req, res, next) => {
   try {

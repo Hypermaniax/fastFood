@@ -1,8 +1,8 @@
 const express = require("express");
-const merchantCRUD = require("../private/merchant/merchatCRUD");
+const restaurant = require("../private/merchant/restauranRoute");
 const checkrole = require("../../middleware/checkRole");
 const router = express();
 
-router.use("/merchant", checkrole("merchant"), merchantCRUD);
+router.use("/restaurant", checkrole("merchant"), restaurant);
 
 module.exports = router;

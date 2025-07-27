@@ -1,4 +1,4 @@
-const softDeleteRestaurantSrv = require("../../../service/private/merchant/softDeleteRestaurantSrv");
+const softDeleteRestaurantSrv = require("../../../../service/private/merchant/softDeleteRestaurantSrv");
 
 const softDeleteRestaurantCtl = async (req, res, next) => {
   try {

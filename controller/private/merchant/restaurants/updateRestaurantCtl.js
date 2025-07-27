@@ -1,4 +1,4 @@
-const updateRestaurantSrv = require("../../../service/private/merchant/updateRestaurantSrv");
+const updateRestaurantSrv = require("../../../../service/private/merchant/updateRestaurantSrv");
 
 const updateRestaurantCtl = async (req, res, next) => {
   try {
