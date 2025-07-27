@@ -7,8 +7,6 @@ const {
 const updateRestaurantSrv = async (data, idRestaurant, idUser) => {
   const { error } = updateMerchantSchema.validate(data);
   if (error) throw new ErrorHandler(400, error.details[0].message);
-  const { addres, description, open_time, close_time } = data;
-
   const update = await updateMerchant(
     data,
     idRestaurant,

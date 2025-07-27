@@ -10,13 +10,12 @@ const createMerchant = async (name, id) => {
   return merchant.rows[0];
 };
 
-const listMerchant = async (userId) => {
-  const stringQueries = `SELECT name FROM restaurants WHERE user_id=$1`;
-  const values = [userId];
-
-  const merchant = await pool.query(stringQueries, values);
-
-  return merchant.rows;
+const readMerchant = async (idRestaurant, idUser) => {
+  const stringQueries = `SELECT * FROM restaurants WHERE id=$1 AND user_id=$2`;
+  const values = [idRestaurant, idUser];
+  
+  const merchant = await pool.query(stringQueries,values)
+  return merchant.rows
 };
 
 const updateMerchant = async (data, idRestaurant, idUser) => {
@@ -27,7 +26,7 @@ const updateMerchant = async (data, idRestaurant, idUser) => {
   const values = Object.values(data);
   values.push(idRestaurant, idUser);
 
-  const stringQueries = `UPDATE restaurants SET ${safeFields} WHERE id=$${
+  const stringQueries = `UPDATE restaurants SET ${safeFields} ,updated_at=now() WHERE id=$${
     fields.length + 1
   } AND user_id = $${fields.length + 2} `;
 
@@ -36,4 +35,4 @@ const updateMerchant = async (data, idRestaurant, idUser) => {
   return merchant.rowCount;
 };
 
-module.exports = { createMerchant, listMerchant, updateMerchant };
+module.exports = { createMerchant, updateMerchant, readMerchant };
