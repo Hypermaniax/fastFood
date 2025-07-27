@@ -1,8 +1,7 @@
-const { object } = require("joi");
 const pool = require("../connection");
 
 const createMerchant = async (name, id) => {
-  const stringQueries = `INSERT INTO restaurants (name,user_id) VALUES ($1,$2)`;
+  const stringQueries = `INSERT INTO restaurants (name,user_id) VALUES ($1,$2) RETURNING *`;
   const values = [name, id];
 
   const merchant = await pool.query(stringQueries, values);
@@ -11,11 +10,19 @@ const createMerchant = async (name, id) => {
 };
 
 const readMerchant = async (idRestaurant, idUser) => {
-  const stringQueries = `SELECT * FROM restaurants WHERE id=$1 AND user_id=$2`;
+  const stringQueries = `SELECT * FROM restaurants WHERE id=$1 AND user_id=$2 AND delete_at=null LIMIT 1`;
   const values = [idRestaurant, idUser];
-  
-  const merchant = await pool.query(stringQueries,values)
-  return merchant.rows
+
+  const merchant = await pool.query(stringQueries, values);
+  return merchant.rows[0];
+};
+
+const softDeleteMerchant = async (idRestaurant, idUser) => {
+  const stringQueries = `UPDATE restaurants SET delete_at=now() WHERE id=$1 AND user_id=$2 RETURNING name`;
+  const values = [idRestaurant, idUser];
+
+  const merchant = await pool.query(stringQueries, values);
+  return merchant.rows[0];
 };
 
 const updateMerchant = async (data, idRestaurant, idUser) => {
@@ -35,4 +42,9 @@ const updateMerchant = async (data, idRestaurant, idUser) => {
   return merchant.rowCount;
 };
 
-module.exports = { createMerchant, updateMerchant, readMerchant };
+module.exports = {
+  createMerchant,
+  updateMerchant,
+  readMerchant,
+  softDeleteMerchant,
+};
