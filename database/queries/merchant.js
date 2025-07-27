@@ -10,7 +10,7 @@ const createMerchant = async (name, id) => {
 };
 
 const readMerchant = async (idRestaurant, idUser) => {
-  const stringQueries = `SELECT * FROM restaurants WHERE id=$1 AND user_id=$2 AND delete_at=null LIMIT 1`;
+  const stringQueries = `SELECT * FROM restaurants WHERE id=$1 AND user_id=$2 AND delete_at IS NULL LIMIT 1`;
   const values = [idRestaurant, idUser];
 
   const merchant = await pool.query(stringQueries, values);
@@ -23,6 +23,15 @@ const softDeleteMerchant = async (idRestaurant, idUser) => {
 
   const merchant = await pool.query(stringQueries, values);
   return merchant.rows[0];
+};
+
+const readAllMerchant = async (idRestaurant) => {
+  const stringQueries = `SELECT name,id FROM restaurants WHERE user_id=$1 AND delete_at IS null`;
+  const values = [idRestaurant];
+
+  const merchant = await pool.query(stringQueries, values);
+
+  return merchant.rows;
 };
 
 const updateMerchant = async (data, idRestaurant, idUser) => {
@@ -47,4 +56,5 @@ module.exports = {
   updateMerchant,
   readMerchant,
   softDeleteMerchant,
+  readAllMerchant,
 };

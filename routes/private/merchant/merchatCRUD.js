@@ -3,9 +3,11 @@ const createRestaurantCtl = require("../../../controller/private/merchant/create
 const updateRestaurantCtl = require("../../../controller/private/merchant/updateRestaurantCtl");
 const readRestaurantCtl = require("../../../controller/private/merchant/readRestaurantCtl");
 const softDeleteRestaurantCtl = require("../../../controller/private/merchant/softDeleteRestaurantCtl");
+const readAllRestaurantsCtl = require("../../../controller/private/merchant/readAllRestaurantCtl");
 const router = express();
 
 router.post("/", createRestaurantCtl);
+router.get("/", readAllRestaurantsCtl);
 router.get("/:id", readRestaurantCtl);
 router.delete("/:id", softDeleteRestaurantCtl);
 router.put("/:id", updateRestaurantCtl);
