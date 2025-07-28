@@ -1,19 +1,17 @@
 const pool = require("../connection");
 
 const createFood = async (body, uuid) => {
-  const fields = Object.keys(body).join(", ");
-  const fieldValues = Object.keys(body)
-    .map((_, i) => `$${i + 1}`)
-    .join(", ");
-  const values = Object.values(body);
+  const fields = [...Object.keys(body), "restaurant_id"];
+  const values = [...Object.values(body), uuid];
+  const fieldValues = fields.map((_, i) => `$${i + 1}`).join(", ");
+
   const stringQueries = `
-  INSERT INTO food_items (${fields}, restaurant_id) VALUES (${fieldValues},$${
-    values.length + 1
-  }) returning * `;
-  values.push(uuid);
-  console.log(stringQueries)
+  INSERT INTO food_items (${fields.join(
+    ", "
+  )}) VALUES (${fieldValues}) returning * `;
+  
   const food = await pool.query(stringQueries, values);
-  console.log(food)
+
   return food.rows[0];
 };
 
