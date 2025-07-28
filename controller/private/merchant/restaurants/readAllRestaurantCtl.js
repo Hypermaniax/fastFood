@@ -2,7 +2,7 @@ const readAllRestaurantSrv = require("../../../../service/private/merchant/resta
 
 const readAllRestaurantsCtl = async (req, res, next) => {
   try {
-    const readAll = await readAllRestaurantSrv(req.user.id);
+    const readAll = await readAllRestaurantSrv(req.user.uuid);
     return res
       .status(200)
       .json({

@@ -1,13 +1,13 @@
-const { updateMerchant } = require("../../../../database/queries/merchant");
+const { updateRestaurants } = require("../../../../database/queries/restaurant");
 const ErrorHandler = require("../../../../utils/ErrorHandler");
 const {
-  updateMerchantSchema,
-} = require("../../../../validators/merchant.validator");
+  updateRestaurantsSchema,
+} = require("../../../../validators/restaurant.validator");
 
 const updateRestaurantSrv = async (data, idRestaurant, idUser) => {
-  const { error } = updateMerchantSchema.validate(data);
+  const { error } = updateRestaurantsSchema.validate(data);
   if (error) throw new ErrorHandler(400, error.details[0].message);
-  const update = await updateMerchant(
+  const update = await updateRestaurants(
     data,
     idRestaurant,
     idUser

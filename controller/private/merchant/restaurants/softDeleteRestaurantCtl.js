@@ -4,7 +4,7 @@ const softDeleteRestaurantCtl = async (req, res, next) => {
   try {
     const softDelete = await softDeleteRestaurantSrv(
       req.params.id,
-      req.user.id
+      req.user.uuid
     );
 
     return res.status(200).json({

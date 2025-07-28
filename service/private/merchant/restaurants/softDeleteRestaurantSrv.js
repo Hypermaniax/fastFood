@@ -1,8 +1,9 @@
-const { softDeleteMerchant } = require("../../../../database/queries/merchant");
+const { softDeleteRestaurants } = require("../../../../database/queries/restaurant");
 const ErrorHandler = require("../../../../utils/ErrorHandler");
 
 const softDeleteRestaurantSrv = async (idRestaurant, idUser) => {
-    const merchant =  await softDeleteMerchant(idRestaurant, idUser)
+    const merchant =  await softDeleteRestaurants(idRestaurant, idUser)
+
     if(!merchant) throw new ErrorHandler(401, { message: "Delete is unsuccess" })
     return merchant
 };

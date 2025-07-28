@@ -1,8 +1,9 @@
 const readRestaurantSrv = require("../../../../service/private/merchant/restaurants/readRestaurantSrv");
 
 const readRestaurantCtl = async (req, res, next) => {
+
   try {
-    const read = await readRestaurantSrv(req.params.id, req.user.id);
+    const read = await readRestaurantSrv(req.params.id, req.user.uuid);
 
     return res.status(200).json({ succes: true, data: read });
   } catch (error) {

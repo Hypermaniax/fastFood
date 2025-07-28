@@ -2,7 +2,7 @@ const createRestaurantSrv = require("../../../../service/private/merchant/restau
 
 const createRestaurantCtl = async (req, res, next) => {
   try {
-    await createRestaurantSrv(req.body, req.user);
+    await createRestaurantSrv(req.body, req.user.uuid);
     return res.status(200).json({ message: "succes make restaurant" });
   } catch (error) {
     return next(error);

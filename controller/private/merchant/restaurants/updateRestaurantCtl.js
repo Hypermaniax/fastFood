@@ -2,7 +2,7 @@ const updateRestaurantSrv = require("../../../../service/private/merchant/restau
 
 const updateRestaurantCtl = async (req, res, next) => {
   try {
-    await updateRestaurantSrv(req.body, req.params.id, req.user.id);
+    await updateRestaurantSrv(req.body, req.params.id, req.user.uuid);
     return res
       .status(200)
       .json({ succes: true, message: "succes for update Merchant" });
