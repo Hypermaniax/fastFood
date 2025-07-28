@@ -3,7 +3,7 @@ const createFoodCtl = require("../../../controller/private/merchant/foodItem/cre
 
 const router = express();
 
-router.post("/", createFoodCtl);
+router.post("/:id", createFoodCtl);
 // router.get("/:id");
 // router.get("/");
 // router.delete("/:id");
