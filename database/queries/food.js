@@ -1,18 +1,58 @@
 const pool = require("../connection");
 
 const createFood = async (body, uuid) => {
-  const fields = [...Object.keys(body), "restaurant_id"];
-  const values = [...Object.values(body), uuid];
-  const fieldValues = fields.map((_, i) => `$${i + 1}`).join(", ");
+  const client = await pool.connect();
+  try {
+    client.query("BEGIN");
+    const { category, ...foodData } = body;
 
-  const stringQueries = `
-  INSERT INTO food_items (${fields.join(
-    ", "
-  )}) VALUES (${fieldValues}) returning * `;
-  
-  const food = await pool.query(stringQueries, values);
+    const keys = [Object.keys(foodData).join(", "), "restaurant_id"];
+    const values = [...Object.values(foodData), uuid];
+    const field = values.map((_, i) => `$${i + 1}`).join(", ");
 
-  return food.rows[0];
+    const stringQueriesFood = `
+    INSERT INTO food_items (${keys}) VALUES (${field}) RETURNING *
+    `;
+
+    const result = await client.query(stringQueriesFood, values);
+
+    for (const categories of category) {
+      await client.query(
+        `
+        INSERT INTO food_categories (food_item_id,category_id) VALUES ($1,$2) 
+        `,
+        [result.rows[0].uuid, categories]
+      );
+    }
+
+    await client.query("COMMIT");
+    return result.rows[0];
+  } catch (error) {
+    await client.query(`ROLLBACK`);
+  } finally {
+    client.release();
+  }
 };
 
-module.exports = { createFood };
+const readAllFood = async (idRestaurant) => {
+  const stringQueries = `
+  SELECT
+       fi.name AS menu,fi.description,fi.price,fi.image_url,string_agg(cs.name,', ') AS categories
+  FROM
+       food_items fi 
+       JOIN food_categories fc ON fc.food_item_id = fi.uuid
+       JOIN categories cs ON cs.uuid = fc.category_id
+       WHERE fi.restaurant_id = $1
+  GROUP BY
+        fi.name,fi.description,fi.price,fi.image_url
+
+  `;
+
+  const values = [idRestaurant];
+
+  const result = await pool.query(stringQueries, values);
+  console.log(result.rows)
+  return result.rows;
+};
+
+module.exports = { createFood, readAllFood };

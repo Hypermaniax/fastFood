@@ -5,6 +5,7 @@ const createFoodShecma = Joi.object({
   description: Joi.string().optional(),
   price: Joi.number().required(),
   image_url: Joi.string().optional(),
+  category:Joi.array().required()
 });
 
 module.exports = { createFoodShecma };
