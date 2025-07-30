@@ -1,4 +1,5 @@
 const pool = require("../connection");
+const ErrorHandler = require("../../utils/ErrorHandler");
 
 const createFood = async (body, uuid) => {
   const client = await pool.connect();
@@ -37,22 +38,68 @@ const createFood = async (body, uuid) => {
 const readAllFood = async (idRestaurant) => {
   const stringQueries = `
   SELECT
-       fi.name AS menu,fi.description,fi.price,fi.image_url,string_agg(cs.name,', ') AS categories
+       fi.name AS menu,fi.description,fi.price,fi.image_url,string_agg(cs.name,', ') AS categories,fi.uuid
   FROM
        food_items fi 
        JOIN food_categories fc ON fc.food_item_id = fi.uuid
        JOIN categories cs ON cs.uuid = fc.category_id
        WHERE fi.restaurant_id = $1
   GROUP BY
-        fi.name,fi.description,fi.price,fi.image_url
+        fi.name,fi.description,fi.price,fi.image_url,fi.uuid
 
   `;
 
   const values = [idRestaurant];
 
   const result = await pool.query(stringQueries, values);
-  console.log(result.rows)
   return result.rows;
 };
 
-module.exports = { createFood, readAllFood };
+const updateFood = async (body, uuid, idUser) => {
+  const client = await pool.connect();
+  try {
+    await client.query("BEGIN");
+    const { category, ...foodData } = body;
+    const keys = [...Object.keys(foodData)].map(
+      (item, index) => `${item}=$${index + 1}`
+    );
+    const values = [...Object.values(foodData)];
+
+    values.push(uuid);
+
+    const stringQueriesUpdateFood = `
+    UPDATE food_items SET ${keys}  WHERE uuid = $${values.length} RETURNING *`;
+
+    const resultUpdateFood = await client.query(
+      stringQueriesUpdateFood,
+      values
+    );
+
+    if (resultUpdateFood.rows.length === 0) {
+      throw new ErrorHandler(404, { message: "food item not found" });
+    }
+
+    await client.query(`DELETE FROM food_categories WHERE food_item_id = $1`, [
+      uuid,
+    ]);
+
+    for (const categories of category) {
+      await client.query(
+        `INSERT INTO food_categories (food_item_id,category_id) VALUES ($1,$2)`,
+        [uuid, categories]
+      );
+    }
+
+    await client.query("COMMIT");
+
+    return resultUpdateFood.rows[0];
+    
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw new ErrorHandler(401, error);
+  } finally {
+    client.release();
+  }
+};
+
+module.exports = { createFood, readAllFood, updateFood };
