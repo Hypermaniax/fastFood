@@ -43,7 +43,7 @@ const readAllFood = async (idRestaurant) => {
        food_items fi 
        JOIN food_categories fc ON fc.food_item_id = fi.uuid
        JOIN categories cs ON cs.uuid = fc.category_id
-       WHERE fi.restaurant_id = $1
+       WHERE fi.restaurant_id = $1 AND fi.deleted_at IS NULL
   GROUP BY
         fi.name,fi.description,fi.price,fi.image_url,fi.uuid
 
@@ -53,6 +53,24 @@ const readAllFood = async (idRestaurant) => {
 
   const result = await pool.query(stringQueries, values);
   return result.rows;
+};
+
+const readFood = async (params) => {
+  const stringQueries = `
+  SELECT
+   fi.name, fi.description, cs.name AS categories
+  FROM
+    food_items fi
+    JOIN food_categories fc ON fc.food_item_id = fi.uuid
+    JOIN categories cs ON cs.uuid = fc.category_id
+  WHERE
+    fi.uuid = $1
+  `;
+
+  const value = [params];
+
+  const result = await pool.query(stringQueries, value);
+  return result.rows[0];
 };
 
 const updateFood = async (body, uuid, idUser) => {
@@ -68,7 +86,8 @@ const updateFood = async (body, uuid, idUser) => {
     values.push(uuid);
 
     const stringQueriesUpdateFood = `
-    UPDATE food_items SET ${keys}  WHERE uuid = $${values.length} RETURNING *`;
+    UPDATE food_items SET ${keys}  WHERE uuid = $${values.length} RETURNING *
+    `;
 
     const resultUpdateFood = await client.query(
       stringQueriesUpdateFood,
@@ -76,30 +95,31 @@ const updateFood = async (body, uuid, idUser) => {
     );
 
     if (resultUpdateFood.rows.length === 0) {
-      throw new ErrorHandler(404, { message: "food item not found" });
+      throw new ErrorHandler(500, { message: "food item not found" });
     }
 
-    await client.query(`DELETE FROM food_categories WHERE food_item_id = $1`, [
-      uuid,
-    ]);
-
-    for (const categories of category) {
+    if (!category || category.length >= 1) {
       await client.query(
-        `INSERT INTO food_categories (food_item_id,category_id) VALUES ($1,$2)`,
-        [uuid, categories]
+        `DELETE FROM food_categories WHERE food_item_id = $1`,
+        [uuid]
       );
+      for (const categories of category) {
+        await client.query(
+          `INSERT INTO food_categories (food_item_id,category_id) VALUES ($1,$2)`,
+          [uuid, categories]
+        );
+      }
     }
 
     await client.query("COMMIT");
 
     return resultUpdateFood.rows[0];
-    
   } catch (error) {
     await client.query("ROLLBACK");
-    throw new ErrorHandler(401, error);
+    throw new ErrorHandler(500, { message: error.message });
   } finally {
     client.release();
   }
 };
 
-module.exports = { createFood, readAllFood, updateFood };
+module.exports = { createFood, readAllFood, updateFood, readFood };
