@@ -73,6 +73,17 @@ const readFood = async (params) => {
   return result.rows[0];
 };
 
+const softDelete = async (params) => {
+  const stringQueries = `
+  UPDATE food_items SET deleted_at = NULL WHERE food_items.uuid = $1 
+  `;
+  const values = [params];
+
+  const result = await pool.query(stringQueries, values);
+
+  return result.rowCount;
+};
+
 const updateFood = async (body, uuid, idUser) => {
   const client = await pool.connect();
   try {
@@ -122,4 +133,4 @@ const updateFood = async (body, uuid, idUser) => {
   }
 };
 
-module.exports = { createFood, readAllFood, updateFood, readFood };
+module.exports = { createFood, readAllFood, updateFood, readFood, softDelete };
