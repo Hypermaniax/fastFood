@@ -75,7 +75,7 @@ const readFood = async (params) => {
 
 const softDelete = async (params) => {
   const stringQueries = `
-  UPDATE food_items SET deleted_at = NULL WHERE food_items.uuid = $1 
+  UPDATE food_items SET deleted_at = NOW() WHERE food_items.uuid = $1 
   `;
   const values = [params];
 
