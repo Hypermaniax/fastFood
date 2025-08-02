@@ -18,8 +18,10 @@ const loginSrv = async (params) => {
 
   delete exist.password;
   const token = generate(exist);
+  
+  const { uuid, phone, updated_at, created_at, ...clean } = exist;
 
-  return token;
+  return { token, user: clean };
 };
 
 module.exports = loginSrv;
