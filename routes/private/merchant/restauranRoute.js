@@ -1,10 +1,10 @@
 const express = require("express");
 
-const createRestaurantCtl = require("../../../controller/private/merchant/restaurants/createRestaurantCtl");
-const updateRestaurantCtl = require("../../../controller/private/merchant/restaurants/updateRestaurantCtl");
-const readRestaurantCtl = require("../../../controller/private/merchant/restaurants/readRestaurantCtl");
-const softDeleteRestaurantCtl = require("../../../controller/private/merchant/restaurants/softDeleteRestaurantCtl");
-const readAllRestaurantsCtl = require("../../../controller/private/merchant/restaurants/readAllRestaurantCtl");
+const createRestaurantCtl = require("../../../controller/private/merchant/restaurants/createRestaurant.controller");
+const updateRestaurantCtl = require("../../../controller/private/merchant/restaurants/updateRestaurant.controller");
+const readRestaurantCtl = require("../../../controller/private/merchant/restaurants/readRestaurant.controller");
+const softDeleteRestaurantCtl = require("../../../controller/private/merchant/restaurants/softDeleteRestaurant.controller");
+const readAllRestaurantsCtl = require("../../../controller/private/merchant/restaurants/readAllRestaurant.controller");
 
 const router = express();
 

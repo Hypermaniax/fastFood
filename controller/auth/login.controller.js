@@ -1,9 +1,9 @@
-const loginSrv = require("../../service/users/loginSrv");
+const loginSrv = require("../../service/users/login.service");
 
 const loginCtl = async (req, res, next) => {
   try {
     const result = await loginSrv(req.body);
-    res.cookie("token", result.token, {
+    res.cookie("token", result, {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
@@ -11,7 +11,7 @@ const loginCtl = async (req, res, next) => {
     });
     return res
       .status(200)
-      .json({ success: true, message: "succes login", user: result.user });
+      .json({ success: true, message: "login success",});
   } catch (error) {
     next(error);
   }

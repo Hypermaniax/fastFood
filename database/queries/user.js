@@ -25,8 +25,17 @@ const findUsernameOrEmail = async (username) => {
   return user.rows[0];
 };
 
+const findUser = async (uuid) => {
+  const stringQueries = `SELECT name,email,phone,role,username,created_at FROM users where uuid = $1`;
+
+  const value = [uuid];
+  const user = await pool.query(stringQueries, value);
+  return user.rows[0];
+};
+
 module.exports = {
   createUser,
   findUsernameEmailExist,
   findUsernameOrEmail,
+  findUser,
 };

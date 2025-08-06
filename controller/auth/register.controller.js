@@ -1,4 +1,4 @@
-const registerSrv = require("../../service/users/registerSrv");
+const registerSrv = require("../../service/users/register.service");
 
 const registerCtl = async (req, res, next) => {
   try {
