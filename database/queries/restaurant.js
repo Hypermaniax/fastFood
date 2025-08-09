@@ -51,10 +51,18 @@ const updateRestaurants = async (data, idRestaurant, idUser) => {
   return Restaurants.rowCount;
 };
 
+const readAllRestaurantPublic = async () => {
+  const stringQueries = `SELECT uuid,name,is_open,rating,address FROM restaurants`;
+
+  const restaurant = await pool.query(stringQueries);
+  return restaurant.rows;
+};
+
 module.exports = {
   createRestaurants,
   updateRestaurants,
   readRestaurants,
   softDeleteRestaurants,
   readAllRestaurants,
+  readAllRestaurantPublic,
 };

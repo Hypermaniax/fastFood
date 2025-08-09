@@ -15,7 +15,7 @@ app.use(
     credentials: true,
   })
 );
-app.use("/api", router);
+app.use("/food-race", router);
 app.use(apiError);
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Server running at http://localhost:${process.env.PORT}`);

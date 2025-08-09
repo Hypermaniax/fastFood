@@ -133,4 +133,20 @@ const updateFood = async (body, uuid, idUser) => {
   }
 };
 
-module.exports = { createFood, readAllFood, updateFood, readFood, softDelete };
+const getAllFoodByIdGlobal = async (uuid) => {
+  const stringQueries = `SELECT fi.name, fi.description FROM  food_items fi where restaurant_id =$1`;
+
+  const values = [uuid];
+  const result = await pool.query(stringQueries, values);
+
+  return result.rows;
+};
+
+module.exports = {
+  createFood,
+  readAllFood,
+  updateFood,
+  readFood,
+  softDelete,
+  getAllFoodByIdGlobal,
+};
