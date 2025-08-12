@@ -2,56 +2,42 @@ const pool = require("../connection");
 const ErrorHandler = require("../../utils/ErrorHandler");
 
 const createFood = async (body, uuid) => {
-  const client = await pool.connect();
-  try {
-    client.query("BEGIN");
-    const { category, ...foodData } = body;
+  const keys = Object.keys(body).join(", ");
+  const placeHolder = [...Object.values(body), uuid]
+    .map((_, index) => `$${index + 1}`)
+    .join(", ");
 
-    const keys = [Object.keys(foodData).join(", "), "restaurant_id"];
-    const values = [...Object.values(foodData), uuid];
-    const field = values.map((_, i) => `$${i + 1}`).join(", ");
+  const stringQueries = `
+  INSERT INTO menu_item (${keys}, menu_category_uuid) VALUES (${placeHolder})
+  `;
 
-    const stringQueriesFood = `
-    INSERT INTO food_items (${keys}) VALUES (${field}) RETURNING *
-    `;
+  const values = [...Object.values(body), uuid];
+  const result = await pool.query(stringQueries, values);
 
-    const result = await client.query(stringQueriesFood, values);
-
-    for (const categories of category) {
-      await client.query(
-        `
-        INSERT INTO food_categories (food_item_id,category_id) VALUES ($1,$2) 
-        `,
-        [result.rows[0].uuid, categories]
-      );
-    }
-
-    await client.query("COMMIT");
-    return result.rows[0];
-  } catch (error) {
-    await client.query(`ROLLBACK`);
-  } finally {
-    client.release();
-  }
+  return result;
 };
 
 const readAllFood = async (idRestaurant) => {
   const stringQueries = `
   SELECT
-       fi.name AS menu,fi.description,fi.price,fi.image_url,string_agg(cs.name,', ') AS categories,fi.uuid
+      mi.name,
+      mi.description,
+      mi.price,
+      mi.image_url,
+      mi.is_available,
+      mc.menu_category
   FROM
-       food_items fi 
-       JOIN food_categories fc ON fc.food_item_id = fi.uuid
-       JOIN categories cs ON cs.uuid = fc.category_id
-       WHERE fi.restaurant_id = $1 AND fi.deleted_at IS NULL
-  GROUP BY
-        fi.name,fi.description,fi.price,fi.image_url,fi.uuid
+      menu_item mi
+      JOIN menu_category mc ON mc.uuid = mi.menu_category_uuid
+  WHERE
+      mc.uuid = $1
 
   `;
 
   const values = [idRestaurant];
 
   const result = await pool.query(stringQueries, values);
+  console.log(result.rows)
   return result.rows;
 };
 
@@ -134,7 +120,7 @@ const updateFood = async (body, uuid, idUser) => {
 };
 
 const getAllFoodByIdGlobal = async (uuid) => {
-  const stringQueries = `SELECT fi.name, fi.description FROM  food_items fi where restaurant_id =$1`;
+  const stringQueries = `SELECT fi.name, fi.description , fi.is_available, fi.uuid FROM  food_items fi where restaurant_id =$1`;
 
   const values = [uuid];
   const result = await pool.query(stringQueries, values);

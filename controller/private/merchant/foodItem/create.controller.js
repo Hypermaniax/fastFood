@@ -2,9 +2,8 @@ const createFoodSrv = require("../../../../service/private/merchant/foodItem/cre
 
 const createFoodCtl = async (req, res, next) => {
   try {
-    console.log('2')
     const createFood = await createFoodSrv(req.body, req.params.id);
-    return res.status(200).json({message : `succes create food ${createFood.name}` });
+    return res.status(200).json({message : `succes create food ${createFood}` });
   } catch (error) {
     return next(error);
   }

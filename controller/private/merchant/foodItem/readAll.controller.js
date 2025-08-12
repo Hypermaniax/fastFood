@@ -2,7 +2,7 @@ const readAllFoodSrv = require("../../../../service/private/merchant/foodItem/re
 
 const readAllFoodCtl = async (req, res, next) => {
   try {
-
+    console.log(req.params.id)
     const readAllFood = await readAllFoodSrv(req.params.id);
     return res.status(200).json({
       succes: true,

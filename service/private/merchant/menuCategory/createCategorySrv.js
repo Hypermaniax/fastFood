@@ -2,7 +2,7 @@ const {
   createMenuCategory,
 } = require("../../../../database/queries/menuCategory");
 const ErrorHandler = require("../../../../utils/ErrorHandler");
-const { createCategorySchema } = require("../../../../validators/menuCategory");
+const { createCategorySchema } = require("../../../../validators/menuCategory.validator");
 
 const createCategorySrv = async (params) => {
   const { error } = createCategorySchema.validate(params);
