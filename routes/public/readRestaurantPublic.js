@@ -1,11 +1,8 @@
 const express = require("express");
-const readAllRestaurant = require("../../controller/public/readAllRestaurantCtl");
-const getAllFoodById = require("../../controller/public/getAllFoodByIdCtl");
-const readCtl = require("../../controller/private/menuCategory/readCtl");
+const restaurant = require("../../controller/public/restaurants");
 
 const router = express();
 
-router.get("/", readAllRestaurant);
-router.get("/:id/food",readCtl);
+router.get("/", restaurant.readAllRestaurant);
 
 module.exports = router;

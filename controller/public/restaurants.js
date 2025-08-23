@@ -11,4 +11,4 @@ const readAllRestaurant = async (req, res, next) => {
   }
 };
 
-module.exports = readAllRestaurant;
+module.exports = {readAllRestaurant};

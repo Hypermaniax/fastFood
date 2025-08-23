@@ -9,4 +9,4 @@ const readCtl = async (req, res, next) => {
   }
 };
 
-module.exports = readCtl;
+module.exports = { readCtl };

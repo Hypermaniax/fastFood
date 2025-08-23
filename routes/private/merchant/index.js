@@ -2,7 +2,7 @@ const express = require("express");
 const checkrole = require("../../../middleware/checkRole");
 const restaurant = require("./restauranRoute");
 const category = require("./categoryRoute");
-const food = require("./foodRoute");
+const food = require("./menuItems");
 const router = express();
 
 router.use(checkrole("merchant"));

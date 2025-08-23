@@ -1,18 +1,11 @@
 const express = require("express");
-
-const createRestaurantCtl = require("../../../controller/private/merchant/restaurants/createRestaurant.controller");
-const updateRestaurantCtl = require("../../../controller/private/merchant/restaurants/updateRestaurant.controller");
-const readRestaurantCtl = require("../../../controller/private/merchant/restaurants/readRestaurant.controller");
-const softDeleteRestaurantCtl = require("../../../controller/private/merchant/restaurants/softDeleteRestaurant.controller");
-const readAllRestaurantsCtl = require("../../../controller/private/merchant/restaurants/readAllRestaurant.controller");
-
+const restaurants = require("../../../controller/private/merchant/restaurants");
 const router = express();
 
-
-router.post("/", createRestaurantCtl);
-router.get("/", readAllRestaurantsCtl);
-router.get("/:id", readRestaurantCtl);
-router.delete("/:id", softDeleteRestaurantCtl);
-router.put("/:id", updateRestaurantCtl);
+router.post("/", restaurants.createRestaurantCtl);
+router.get("/", restaurants.readAllRestaurantsCtl);
+router.get("/:id", restaurants.readRestaurantCtl);
+router.delete("/:id", restaurants.softDeleteRestaurantCtl);
+router.put("/:id", restaurants.updateRestaurantCtl);
 
 module.exports = router;

@@ -1,10 +1,8 @@
 const express = require("express");
-const createCategoryCtl = require("../../../controller/private/menuCategory/createCtl");
-const readCtl = require("../../../controller/private/menuCategory/readCtl");
-
+const category = require("../../../controller/private/merchant/menuCategory");
 const router = express();
 
-router.post("/", createCategoryCtl);
-router.get("/:id", readCtl);
+router.post("/", category.createCategoryCtl);
+router.get("/:id", category.readCtl);
 
 module.exports = router;

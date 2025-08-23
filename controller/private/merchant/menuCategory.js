@@ -1,4 +1,14 @@
+const readAllCategorySrv = require("../../../service/private/merchant/menuCategory/readAllCategory");
 const createCategorySrv = require("../../../service/private/merchant/menuCategory/createCategorySrv");
+
+const readCtl = async (req, res, next) => {
+  try {
+    const result = await readAllCategorySrv(req.params.id);
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const createCategoryCtl = async (req, res, next) => {
   try {
@@ -13,4 +23,4 @@ const createCategoryCtl = async (req, res, next) => {
   }
 };
 
-module.exports = createCategoryCtl
+module.exports = { readCtl, createCategoryCtl };

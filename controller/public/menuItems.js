@@ -10,4 +10,6 @@ const getAllFoodByIdCtl = async (req, res, next) => {
   }
 };
 
-module.exports = getAllFoodByIdCtl;
+
+
+module.exports = { getAllFoodByIdCtl };
